@@ -1,0 +1,6 @@
+/Project E/.vs/
+/Project E/Library/
+/Project E/Temp/
+/Project E/obj/
+*.csproj
+*.sln
