@@ -8,41 +8,41 @@ public class characterConfig : MonoBehaviour {
     public float characterSpeed = 0.1f;           //主角移动速度
     public int money = 0;                         //获得的金币数
     public float happinessGetWhenEatMoney;
-    public float happness = 1000f;                   //幸福值 
+    public float maxHappiness = 1000f;
+    public float happinessIncreaseNearHome = 5f;
+    public float happinessDecreaseAwayFromHome = 1.5f;
+    public float curHappiness = 1000f;                   //幸福值 
     public float AISpeedPercent = 0.8f;           //AI相对于主角移动的速率
-    public float AISpeed;
 
     public characterControl characterControl;
+    public PlayerState playerState;
     public lightControl lightControl;
     public AIChontroller AIChontroller;
-    public UIsControl UIsControl;
 
 	// Use this for initialization
 	void Start () {
-        happness = 1000f;
+        
 	}
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
 
-        AISpeed = AISpeedPercent * characterSpeed;
-
-        //money = characterControl.money;
-
-        if(happness >= 1000)
+        if (playerState.playerlocation == "Home" || playerState.playerlocation == "Chase")
         {
-            characterControl.happness1 = 0;
+            curHappiness = curHappiness + happinessIncreaseNearHome * Time.deltaTime;
         }
-        happness = UIsControl.happness + characterControl.happness1;
-
-
+        else
+        {
+            curHappiness = curHappiness - happinessDecreaseAwayFromHome * Time.deltaTime;
+        }
+        curHappiness = Mathf.Clamp(curHappiness, 0f, maxHappiness);
     }
 
     public void AddMoney()
     {
         money += 1;
-        happness += 100f;
+        curHappiness += 100f;
     }
     
 }

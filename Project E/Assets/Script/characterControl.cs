@@ -6,7 +6,6 @@ public class characterControl : MonoBehaviour {
 
 
     public float mainCharacterSpeed;
-    public float happness1;
 
     Transform CharacterTrans;
     Rigidbody2D CharacterRigid;

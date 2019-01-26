@@ -4,17 +4,22 @@ using UnityEngine;
 
 public class lightControl : MonoBehaviour {
 
-    public float range; 
+    public float range;
+    public float homeRange;
+    public float chaseMinRange;
+    public float chaseIncreaseByTime;
+    public float chaseMaxRange;
+    public float freedomRange;
+    public float homesickByHappinessRatio;
+    public float homeSickMinRange;
     Transform trans;
 
     public Transform home;
 
-
     public characterConfig characterConfig;
 
     public bool swth;
-    public playerState playerState;
-
+    public PlayerState playerState;
 
     void Awake()
     {
@@ -32,24 +37,19 @@ public class lightControl : MonoBehaviour {
             swth = true;
         }
 
-
-
-
-
-
         if (swth == false )
         {
             
-        range = characterConfig.lightRange*0.1f *(transform.position.x - home.transform.position.x ) ;     //从characterConfig获取光照范围
+            range = characterConfig.lightRange*0.1f *(transform.position.x - home.transform.position.x ) ;     //从characterConfig获取光照范围
         }
         else
         {
 
-            range = range - 0.01f;
+            range = range - 0.01f * Time.deltaTime;
 
-            if(range <= 2)
+            if(range <= minRange)
             {
-                range = 2;
+                range = minRange;
                 
             }
         }

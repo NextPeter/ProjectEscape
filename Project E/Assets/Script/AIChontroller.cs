@@ -10,7 +10,7 @@ public class AIChontroller : MonoBehaviour {
     private Animator anim;
     public bool AIGetA;
     public bool catchPlayer;
-    public playerState playerState;
+    public PlayerState playerState;
 
     float SpeedUp = 40f;
 
@@ -30,7 +30,7 @@ public class AIChontroller : MonoBehaviour {
         
         if(playerState.playerlocation == "Chase")
         {
-            AISpeed = characterConfig.AISpeed;
+            AISpeed = characterConfig.AISpeedPercent * characterConfig.characterSpeed;
             Vector2 character = new Vector2(CharacterTrans.transform.position.x, CharacterTrans.transform.position.y);
 
             transform.position = Vector3.MoveTowards(transform.position, character, Time.deltaTime * SpeedUp * AISpeed);

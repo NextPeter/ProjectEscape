@@ -10,7 +10,7 @@ public class endTrigger : MonoBehaviour {
     public DiamondA DiamondA;
     public DiamondB DiamondB;
     public DiamondC DiamondC;
-    public playerState PlayerState;
+    public PlayerState PlayerState;
 
 
     public bool backHome = false;
@@ -70,7 +70,7 @@ public class endTrigger : MonoBehaviour {
             Debug.Log("第三剧情达成");
         }
         //============================================================================================
-        if(characterConfig.happness < 300)
+        if(characterConfig.curHappiness < 300)
         {
             backHome = true;
             if(PlayerState.playerlocation == "Home")
