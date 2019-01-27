@@ -5,6 +5,7 @@ using UnityEngine;
 public class DiamondB : MonoBehaviour {
 
     public bool DiamondBGet;
+    public UIsControl ui;
     // Use this for initialization
     void Start () {
 		
@@ -18,6 +19,7 @@ public class DiamondB : MonoBehaviour {
     {
         if (collision.gameObject.layer == 8)
         {
+            ui.panelReward.SetActive(true);
             DiamondBGet = true;
         }
     }

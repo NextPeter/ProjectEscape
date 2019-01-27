@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class AIChontroller : MonoBehaviour {
 
@@ -9,16 +10,22 @@ public class AIChontroller : MonoBehaviour {
     public Transform CharacterTrans;
     private Animator anim;
     public bool AIGetA;
-    public bool catchPlayer;
     public PlayerState playerState;
 
-    float SpeedUp = 40f;
+    public lightControl lightControl;
+    public characterControl characterControl;
+    public Rigidbody2D rigid;
 
+    float SpeedUp = 40f;
+    Vector3 startUpPosition;
+    bool isReset = false;
 
     private void Awake()
     {
         anim = GetComponent<Animator>();
         AIGetA = false;
+        startUpPosition = transform.position;
+
     }
     // Use this for initialization
     void Start () {
@@ -26,14 +33,21 @@ public class AIChontroller : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-        
+	void FixedUpdate () {
+        if(isReset)
+        {
+            isReset = false;
+            transform.position = startUpPosition;
+            return;
+        }
         if(playerState.playerlocation == "Chase")
         {
             AISpeed = characterConfig.AISpeedPercent * characterConfig.characterSpeed;
             Vector2 character = new Vector2(CharacterTrans.transform.position.x, CharacterTrans.transform.position.y);
 
-            transform.position = Vector3.MoveTowards(transform.position, character, Time.deltaTime * SpeedUp * AISpeed);
+
+
+            rigid.MovePosition((Vector2)transform.position + Time.deltaTime * AISpeed * (character - (Vector2)transform.position).normalized);
 
 
             if (CharacterTrans.transform.position.x > 0)
@@ -84,9 +98,27 @@ public class AIChontroller : MonoBehaviour {
         {
             AIGetA = true;
         }
-        if (collision.gameObject.layer == 8)
+        if (collision.gameObject.layer == 8 && playerState.playerState == PlayerStateEnum.Esacaping)
         {
-            catchPlayer = true;
+            isReset = true;
+            characterConfig.DataReset();
+            playerState.DataReset();
+            characterControl.DataReset();
+            //if(playerState.playerState == PlayerStateEnum.Esacaping)
+            //{
+            //    lightControl.SetToZero(() =>
+            //    {
+            //        CharacterTrans.position = startUpPosition;
+            //        //lightControl.DataReset();
+            //        characterConfig.DataReset();
+            //        playerState.DataReset();
+            //        characterControl.DataReset();
+            //    },
+            //    () =>
+            //    {
+            //        ;
+            //    });
+            //}
         }
     }
 }

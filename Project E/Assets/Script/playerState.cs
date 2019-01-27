@@ -22,6 +22,9 @@ public class PlayerState : MonoBehaviour {
     public areaB areaB;
     public areaC areaC;
 
+    public UIsControl ui;
+    public GameObject cannotGetBackCollider2D;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -32,27 +35,22 @@ public class PlayerState : MonoBehaviour {
         if (areaHome.playerInHome == true)
         {
             playerlocation = "Home";
-            return;
         }
-        if (areaChase.playerInChase == true)
+        else if (areaChase.playerInChase == true)
         {
             playerlocation = "Chase";
-            return;
         }
-        if (areaA.playerInA == true)
+        else if (areaA.playerInA == true)
         {
             playerlocation = "A";
-            return;
         }
-        if (areaB.playerInB == true)
+        else if (areaB.playerInB == true)
         {
             playerlocation = "B";
-            return;
         }
-        if (areaC.playerInC == true)
+        else if (areaC.playerInC == true)
         {
             playerlocation = "C";
-            return;
         }
 
         switch(playerState)
@@ -64,17 +62,41 @@ public class PlayerState : MonoBehaviour {
                 }
                 break;
             case PlayerStateEnum.Esacaping:
-                if (playerlocation == "")
+                if (playerlocation == "Home")
                 {
-                    playerState = PlayerStateEnum.Esacaping;
+                    playerState = PlayerStateEnum.AtHome;
+                }
+                if (playerlocation == "A")
+                {
+                    Time.timeScale = 0;
+                    ui.panelFreedom.SetActive(true);
+                    playerState = PlayerStateEnum.LookingForFun;
+                    //cannotGetBackCollider2D.SetActive(true);
                 }
                 break;
             case PlayerStateEnum.LookingForFun:
+                if (playerlocation == "B")
+                {
+                    Time.timeScale = 0;
+
+                    playerState = PlayerStateEnum.HomeSick;
+                    //cannotGetBackCollider2D.SetActive(false);
+                }
                 break;
             case PlayerStateEnum.HomeSick:
+                if (playerlocation == "Home")
+                {
+                    playerState = PlayerStateEnum.HomeSick;
+                }
                 break;
             case PlayerStateEnum.Backhome:
                 break;
         }
+
+    }
+
+    public void DataReset()
+    {
+        playerState = PlayerStateEnum.AtHome;
     }
 }

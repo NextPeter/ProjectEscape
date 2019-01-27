@@ -1,16 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using DG.Tweening;
 
 public class lightControl : MonoBehaviour {
 
     public float range;
+
     public float homeRange;
     public float chaseMinRange;
     public float chaseIncreaseByTime;
     public float chaseMaxRange;
-    public float freedomRange;
-    public float homesickByHappinessRatio;
+    public float freedomMinRange;
+    public float freedomIncreaseByTime;
+    public float freedomMaxRange;
+    public float homeSickMaxRange;
     public float homeSickMinRange;
     Transform trans;
 
@@ -18,45 +23,57 @@ public class lightControl : MonoBehaviour {
 
     public characterConfig characterConfig;
 
-    public bool swth;
+    public bool isTweening;
     public PlayerState playerState;
 
     void Awake()
     {
-        swth = false;
+        isTweening = false;
     }
     // Use this for initialization
     void Start () {
 		
 	}
-	
+
+    float chaseOutTime;
+    
 	// Update is called once per frame
 	void Update () {
-        if(playerState.playerlocation == "A")
+        if(!isTweening)
         {
-            swth = true;
-        }
-
-        if (swth == false )
-        {
-            
-            range = characterConfig.lightRange*0.1f *(transform.position.x - home.transform.position.x ) ;     //从characterConfig获取光照范围
-        }
-        else
-        {
-
-            range = range - 0.01f * Time.deltaTime;
-
-            if(range <= minRange)
+            float happinessLightRangeRatio = (homeSickMaxRange - homeSickMinRange) / characterConfig.maxHappiness;
+            switch (playerState.playerState)
             {
-                range = minRange;
-                
+                case PlayerStateEnum.AtHome:
+                    //range = homeRange;
+                    range = Mathf.Clamp(characterConfig.curHappiness * happinessLightRangeRatio, homeSickMinRange, homeSickMaxRange);
+                    break;
+                case PlayerStateEnum.Esacaping:
+                    //range = Mathf.Clamp(range + chaseIncreaseByTime * Time.deltaTime, chaseMinRange, chaseMaxRange);
+                    range = Mathf.Clamp(characterConfig.curHappiness * happinessLightRangeRatio, homeSickMinRange, homeSickMaxRange);
+                    break;
+                case PlayerStateEnum.LookingForFun:
+                    //range = Mathf.Clamp(range + freedomIncreaseByTime * Time.deltaTime, freedomMinRange, freedomMaxRange);
+                    range = Mathf.Clamp(characterConfig.curHappiness * happinessLightRangeRatio, homeSickMinRange, homeSickMaxRange);
+                    break;
+                case PlayerStateEnum.HomeSick:
+                    range = Mathf.Clamp(characterConfig.curHappiness * happinessLightRangeRatio, homeSickMinRange, homeSickMaxRange);
+                    break;
+                case PlayerStateEnum.Backhome:
+                    break;
             }
+            
         }
+        transform.localScale = new Vector3(range, range, 1f);
+    }
 
-
-       
-
-        transform.localScale = new Vector3(range, range, range);
-	}
+    public void SetToZero(System.Action _whenFadeOut, Action _whenFadeIn)
+    {
+        Sequence seq = DOTween.Sequence();
+        isTweening = true;
+        seq.Append(DOTween.To(() => range, (x) => range = x, 0f, 2f));
+        seq.AppendCallback(() => _whenFadeOut.Invoke());
+        seq.Append(DOTween.To(() => range, (x) => range = x, 0f, 2f));
+        seq.AppendCallback(() => _whenFadeIn.Invoke());
+    }
 }

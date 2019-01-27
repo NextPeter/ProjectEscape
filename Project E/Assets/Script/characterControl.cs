@@ -15,11 +15,15 @@ public class characterControl : MonoBehaviour {
     public Transform home;
     public characterConfig characterConfig;
 
+    Vector3 startUpPosition;
+
     // Use this for initialization
 
     private void Awake()
     {
         anim = GetComponent<Animator>();
+        CharacterRigid = GetComponent<Rigidbody2D>();
+        startUpPosition = transform.position;
     }
 
     void Start () {
@@ -27,15 +31,17 @@ public class characterControl : MonoBehaviour {
     }
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
         float h = Input.GetAxisRaw("Horizontal");  //获取水平轴（AD）的控制信息
         float v = Input.GetAxisRaw("Vertical");    //获取垂直轴（WS）的控制信息
 
-        mainCharacterSpeed = characterConfig.characterSpeed; //从characterConfig获取速度
+        mainCharacterSpeed = characterConfig.characterSpeed * Time.deltaTime; //从characterConfig获取速度
 
         Vector2 input = new Vector2(h, v);      //用二元数组定义控制的信息
 
-        transform.Translate(mainCharacterSpeed*h, mainCharacterSpeed*v, 0);
+        //transform.Translate(mainCharacterSpeed*h, mainCharacterSpeed*v, 0);
+
+        CharacterRigid.MovePosition(transform.position + new Vector3(mainCharacterSpeed * h, mainCharacterSpeed * v));
 
         if (h > 0)
         {
@@ -75,19 +81,19 @@ public class characterControl : MonoBehaviour {
 
 
 
-        if (endTrigger.backHome == true)
-        {
-            Vector2 character = new Vector2(home.transform.position.x, home.transform.position.y);
+        //if (endTrigger.backHome == true)
+        //{
+        //    Vector2 character = new Vector2(home.transform.position.x, home.transform.position.y);
 
-            transform.position = Vector3.MoveTowards(transform.position, character, Time.deltaTime * SpeedUp );
+        //    transform.position = Vector3.MoveTowards(transform.position, character, Time.deltaTime * SpeedUp );
 
 
 
-                anim.SetBool("left", true);
-                anim.SetBool("right", false);
+        //        anim.SetBool("left", true);
+        //        anim.SetBool("right", false);
 
-            return;
-        }
+        //    return;
+        //}
         
     }
 
@@ -99,5 +105,10 @@ public class characterControl : MonoBehaviour {
             characterConfig.AddMoney();
 
         }
+    }
+
+    public void DataReset()
+    {
+        transform.position = startUpPosition;
     }
 }

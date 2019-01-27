@@ -5,9 +5,9 @@ using UnityEngine;
 public class DiamondA : MonoBehaviour {
 
     public bool DiamondAGet;
-
-	// Use this for initialization
-	void Start () {
+    public UIsControl ui;
+    // Use this for initialization
+    void Start () {
 		
 	}
 	
@@ -19,6 +19,7 @@ public class DiamondA : MonoBehaviour {
     {
         if (collision.gameObject.layer == 8)
         {
+            ui.panelHomesick.SetActive(true);
             DiamondAGet = true;
         }
     }

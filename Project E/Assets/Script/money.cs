@@ -20,7 +20,7 @@ public class money : MonoBehaviour {
         if(collision.gameObject.layer == 8)
         {
             Audio.Play();
-            GameObject.Destroy(this.gameObject); 
+            gameObject.SetActive(false);
             
         }
     }

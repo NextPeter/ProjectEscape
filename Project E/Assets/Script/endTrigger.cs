@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class endTrigger : MonoBehaviour {
     //用于触发故事结局
@@ -19,6 +20,12 @@ public class endTrigger : MonoBehaviour {
     public GameObject AI1;
     public GameObject AI2;
 
+    public UIsControl uiControl;
+
+    public BGMPlayer bgm;
+
+    public bool hasEnded;
+
     // Use this for initialization
     void Start () {
 		
@@ -26,6 +33,8 @@ public class endTrigger : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (hasEnded)
+            return;
         //=========================================================================================
         if(DiamondA.DiamondAGet == true)
         {
@@ -37,20 +46,23 @@ public class endTrigger : MonoBehaviour {
                     AI2.SetActive(true);
                     if (PlayerState.playerlocation == "Home")    //同时满足拿到钻石A并且回家
                     {
-
+                        hasEnded = true;
+                        //bgm.PlayEnd1();
+                        //uiControl..SetActive(true);
+                        SceneManager.LoadScene("End1");
                         //此时触发第一个剧情  
-                        Debug.Log("第一剧情达成");
+                        //Debug.Log("第一剧情达成");
                     }
                 }
             }
             
         }
         //===========================================================================================
-        if (AIChontroller.catchPlayer == true)
-        {
-            //触发游戏结束
-            Debug.Log("被抓住了");
-        }
+        //if (AIChontroller.catchPlayer == true)
+        //{
+        //    //触发游戏结束
+        //    Debug.Log("被抓住了");
+        //}
         //========================================================================================
         if(DiamondB.DiamondBGet == true)
         {
@@ -58,16 +70,21 @@ public class endTrigger : MonoBehaviour {
             AI2.SetActive(false);
             if(PlayerState.playerlocation == "Home")
             {
+                hasEnded = true;
                 //回到家触发剧情妈妈去世了
-                Debug.Log("第二剧情达成");
+                //bgm.PlayEnd2();
+                SceneManager.LoadScene("End2");
             }
         }
         //========================================================================================
         if(DiamondC.DiamondCGet == true)
         {
-            
             //触发剧情 无法回家 迷失
-            Debug.Log("第三剧情达成");
+            //Debug.Log("第三剧情达成");
+            hasEnded = true;
+            //uiControl.panelEnd3.SetActive(true);
+            //bgm.PlayEnd3();
+            SceneManager.LoadScene("End3");
         }
         //============================================================================================
         if(characterConfig.curHappiness < 300)
