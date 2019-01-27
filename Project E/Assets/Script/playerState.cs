@@ -77,7 +77,7 @@ public class PlayerState : MonoBehaviour {
             case PlayerStateEnum.LookingForFun:
                 if (playerlocation == "B")
                 {
-                    Time.timeScale = 0;
+                    //Time.timeScale = 0;
 
                     playerState = PlayerStateEnum.HomeSick;
                     //cannotGetBackCollider2D.SetActive(false);
