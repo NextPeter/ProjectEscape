@@ -14,8 +14,11 @@ public class characterControl : MonoBehaviour {
     float SpeedUp = 10f;
     public Transform home;
     public characterConfig characterConfig;
+    public SpriteRenderer sprite;
 
     Vector3 startUpPosition;
+
+    bool isMoving;
 
     // Use this for initialization
 
@@ -43,40 +46,65 @@ public class characterControl : MonoBehaviour {
 
         CharacterRigid.MovePosition(transform.position + new Vector3(mainCharacterSpeed * h, mainCharacterSpeed * v));
 
-        if (h > 0)
+        
+            
+        if(v != 0 || h != 0)
         {
-            anim.SetBool("right", true);
-            anim.SetBool("left", false);
-        }
-        else if (h < 0)
-        {
-            anim.SetBool("left", true);
-            anim.SetBool("right", false);
+            if(!isMoving)
+            {
+                isMoving = true;
+                anim.SetTrigger("Move");
+            }
+            
         }
         else
         {
-            anim.SetBool("left", false);
-            anim.SetBool("right", false);
+            if (isMoving)
+            {
+                isMoving = false;
+                anim.SetTrigger("Stand");
+            }
         }
 
-        if(v != 0 )
+        if (h != 0)
         {
-            if(h > 0)
-            {
-                anim.SetBool("right", true);
-                anim.SetBool("left", false);
-            }
-            else if (h < 0)
-            {
-                anim.SetBool("left", true);
-                anim.SetBool("right", false);
-            }
-            else
-            {
-                anim.SetBool("left", false);
-                anim.SetBool("right", true);
-            }
+            sprite.flipX = h > 0;
         }
+
+        //if (h > 0)
+        //{
+        //    anim.SetBool("right", true);
+        //    anim.SetBool("left", false);
+        //}
+        //else if (h < 0)
+        //{
+        //    anim.SetBool("left", true);
+        //    anim.SetBool("right", false);
+        //}
+        //else
+        //{
+        //    anim.SetBool("left", false);
+        //    anim.SetBool("right", false);
+        //}
+
+        //if(v != 0 )
+        //{
+        //    if(h > 0)
+        //    {
+        //        anim.SetBool("right", true);
+        //        anim.SetBool("left", false);
+        //    }
+        //    else if (h < 0)
+        //    {
+        //        anim.SetBool("left", true);
+        //        anim.SetBool("right", false);
+        //    }
+        //    else
+        //    {
+        //        anim.SetBool("left", false);
+        //        anim.SetBool("right", true);
+        //    }
+        //}
 
 
 
@@ -94,7 +122,7 @@ public class characterControl : MonoBehaviour {
 
         //    return;
         //}
-        
+
     }
 
 
